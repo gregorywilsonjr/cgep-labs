@@ -4,9 +4,13 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfvars.json
 tfplan
 *.tfplan
+destroyplan
 crash.log
+crash.*.log
+application_default_credentials.json
 
 # OS noise
 .DS_Store
