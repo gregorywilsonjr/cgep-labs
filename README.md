@@ -14,6 +14,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | `terraform/modules/` | Reusable modules other code references |
 | `scripts/` | Shared utility scripts |
 | `policies/` | Rego policies that refuse a non-compliant plan |
+| `.github/workflows/` | CI gates that run those policies on every PR |
 | `evidence/` | Captured proof, one folder per lab |
 
 ## Labs
@@ -25,6 +26,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | 2.5 | [`evidence-vault`](terraform/primitives/evidence-vault/) + [`capture-evidence.sh`](scripts/capture-evidence.sh) | AU-9, AU-11 | [`evidence/lab-2-5/`](evidence/lab-2-5/) |
 | 3.3 | [`policies/`](policies/) | SC-28, AC-3, CM-6 | [`evidence/lab-3-3/`](evidence/lab-3-3/) |
 | 3.4 | [`policies/*_aws.rego`](policies/) + [`policy-gate.sh`](scripts/policy-gate.sh) | SC-28, AC-3, CM-6 (AWS) | [`evidence/lab-3-4/`](evidence/lab-3-4/) |
+| 4.3 | [`oidc-trust`](terraform/primitives/oidc-trust/) + [`grc-gate.yml`](.github/workflows/grc-gate.yml) | CM-3, CM-6, CA-2, CA-7, RA-5, AU-9 | Actions artifact `grc-evidence-<run-id>` |
 
 ## About the evidence files
 
@@ -32,6 +34,9 @@ Lab 2.3 commits `plan.json` and `state.json` (`terraform show -json`): what was 
 before apply and what was recorded after. Lab 2.4 commits `plan.json` and
 `attestation.json`. Lab 3.3 commits `opa-test-results.json` from `opa test --format=json`.
 Lab 3.4 commits `conftest-pass.json` and `conftest-fail.json` from `scripts/policy-gate.sh`.
+Lab 4.3 evidence is the GitHub Actions artifact (`plan.json`, `conftest-results.json`,
+`tfsec.sarif`, `plan.txt`) attached to each `grc-gate` run. Keep the OIDC provider and
+`cgep-grc-gate` role — Lab 4.4 reuses them.
 Live cloud resources are destroyed once evidence is captured — the evidence stands on its
 own.
 

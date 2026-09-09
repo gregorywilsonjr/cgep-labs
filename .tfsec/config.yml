@@ -1,0 +1,5 @@
+# Lab 2.3 encrypts with SSE-S3 AES-256 on purpose. KMS/CMEK is a later lab.
+# Without this exclude, tfsec --minimum-severity HIGH fails every compliant
+# plan and the green PR never goes green.
+exclude:
+  - aws-s3-encryption-customer-key
