@@ -12,5 +12,8 @@ crash.log
 crash.*.log
 application_default_credentials.json
 
+# Lab 3.3 Path B fixture plan (hand-authored; not a live terraform export)
+terraform/primitives/policy-fixture/plan.json
+
 # OS noise
 .DS_Store
