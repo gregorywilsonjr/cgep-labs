@@ -10,17 +10,28 @@ provider "aws" { region = "us-east-1" }
 
 # Required — no defaults. A default that pointed at GRCEngClub/cgep-app-starter
 # would bind this role to the course demo repo, not yours (see GRCEngClub PR #9).
-variable "github_org" { type = string }
+variable "github_org"  { type = string }
 variable "github_repo" { type = string }
+
+# Immutable OIDC ids (GitHub, repos created after 2026-07-15).
+# From: gh api repos/<org>/<repo>/actions/oidc/customization/sub
+variable "github_owner_id" { type = string }
+variable "github_repo_id"  { type = string }
+
+locals {
+  classic_sub    = "repo:${var.github_org}/${var.github_repo}:*"
+  immutable_sub  = "repo:${var.github_org}@${var.github_owner_id}/${var.github_repo}@${var.github_repo_id}:*"
+}
 
 resource "aws_iam_openid_connect_provider" "github" {
   url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]
-  # DigiCert root used by GitHub Actions. Keep the published value; add the
-  # post-rotation intermediate so a cert change does not break assume-role.
+  # Guide still lists DigiCert. GitHub's current chain is Let's Encrypt / ISRG.
   thumbprint_list = [
     "6938fd4d98bab03faadb97b34396831e3780aea1",
     "1c58a3a8518e8759bf075b76b750d4f2df264fcd",
+    "2d74d6dfd96eea55ad7baafa0d3c6552b2dadc37",
+    "ab9d0263244dd0326eb67015705a667e79cfe998",
   ]
 }
 
@@ -35,7 +46,12 @@ resource "aws_iam_role" "grc_gate" {
       Action    = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = { "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com" }
-        StringLike   = { "token.actions.githubusercontent.com:sub" = "repo:${var.github_org}/${var.github_repo}:*" }
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = [
+            local.classic_sub,
+            local.immutable_sub,
+          ]
+        }
       }
     }]
   })
