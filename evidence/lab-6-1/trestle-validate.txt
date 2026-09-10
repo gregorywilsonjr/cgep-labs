@@ -1,0 +1,8 @@
+=== component-definition ===
+VALID: Model /tmp/cgep-trestle-work/component-definitions/compliant-s3-v1/component-definition.json passed the Validator to confirm the model passes all registered validation tests.
+
+=== profile ===
+VALID: Model /tmp/cgep-trestle-work/profiles/cge-p-minimum/profile.json passed the Validator to confirm the model passes all registered validation tests.
+
+=== trestle version ===
+Trestle version v5.1.0 based on OSCAL version 1.2.1
