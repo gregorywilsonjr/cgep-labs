@@ -16,6 +16,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | `scripts/` | Shared utility scripts |
 | `policies/` | Rego policies that refuse a non-compliant plan |
 | `.github/workflows/` | CI gates that run those policies on every PR |
+| `oscal/` | Machine-readable control claims (component + profile) |
 | `evidence/` | Captured proof, one folder per lab |
 
 ## Labs
@@ -31,6 +32,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | 4.4 | Cosign keyless signing + [`verify-evidence.sh`](scripts/verify-evidence.sh) + Lab 2.5 vault | AU-9, AU-11 | [`evidence/lab-4-4/receipt.json`](evidence/lab-4-4/receipt.json) |
 | 5.2 | [`baselines/aws`](terraform/baselines/aws/) | AU-2, AU-12, AU-10, RA-5, SI-4, CM-2, CM-6, CM-8 | [`evidence/lab-5-2/`](evidence/lab-5-2/) |
 | 5.4 | [`baselines/gcp`](terraform/baselines/gcp/) + [`gcp-wif-demo.yml`](.github/workflows/gcp-wif-demo.yml) | CM-6, AC-2, AC-3, AU-2 | [`evidence/lab-5-4/iam-policy.json`](evidence/lab-5-4/iam-policy.json) |
+| 6.1 | [`oscal/components/compliant-s3.json`](oscal/components/compliant-s3.json) + [`oscal/profiles/cge-p-minimum.json`](oscal/profiles/cge-p-minimum.json) | SC-28, AC-3, AU-3, CM-6 | [`evidence/lab-6-1/trestle-validate.txt`](evidence/lab-6-1/trestle-validate.txt) |
 
 ## About the evidence files
 
@@ -52,6 +54,9 @@ standards are destroyed after capture so the per-check bill stops.
 Lab 5.4 evidence is `evidence/lab-5-4/iam-policy.json` (Data Access audit
 configs). WIF is left standing so `.github/workflows/gcp-wif-demo.yml` can
 authenticate without a JSON key.
+Lab 6.1 evidence is `evidence/lab-6-1/trestle-validate.txt` (`VALID` from
+`trestle` for the component definition and the profile). The component's
+evidence `href`s point at the Lab 4.4 vault object with a `versionId`.
 
 Terraform working files — `.terraform/`, `.terraform.lock.hcl`, `*.tfstate`, `tfplan`,
 `*.tfvars` — are excluded by `.gitignore`. They are machine-specific and can carry

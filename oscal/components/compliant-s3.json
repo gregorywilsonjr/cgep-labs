@@ -1,0 +1,114 @@
+{
+  "component-definition": {
+    "uuid": "c5798ee0-9c1d-4191-9bd0-8fdf60587422",
+    "metadata": {
+      "title": "compliant-s3 module v1",
+      "last-modified": "2026-09-10T22:50:00.000000+00:00",
+      "version": "1.0.0",
+      "oscal-version": "1.2.1",
+      "parties": [
+        {
+          "uuid": "90a273c1-1e18-4e40-89ac-ee770c38f5d3",
+          "type": "organization",
+          "name": "CGE-P lab (gregorywilsonjr)"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "7d57d78c-ac47-40cb-b994-fc1d2553a894",
+        "type": "software",
+        "title": "compliant-s3",
+        "description": "Terraform primitive for an AWS S3 primary bucket plus a dedicated access-log bucket. Hardcodes server-side encryption, versioning, public access block, access logging, and required compliance tags. Maps to CGE-P Lab 2.3 at terraform/primitives/compliant-s3.",
+        "purpose": "Provide a compliant-by-default S3 primitive that any team can adopt with a small consumer Terraform file.",
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": ["90a273c1-1e18-4e40-89ac-ee770c38f5d3"]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "6fcfce70-41f7-464b-a60f-bbf0233c2949",
+            "source": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+            "description": "Implementation of NIST 800-53 Rev 5 controls satisfied by this module.",
+            "implemented-requirements": [
+              {
+                "uuid": "aebd27b0-af3c-41df-a6f2-d1817f3f878f",
+                "control-id": "sc-28",
+                "description": "AES-256 server-side encryption is enforced via aws_s3_bucket_server_side_encryption_configuration on both the primary and access-log buckets. Hardcoded; consumers cannot override.",
+                "props": [
+                  { "name": "implementation-status", "value": "implemented" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_server_side_encryption_configuration.primary" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_server_side_encryption_configuration.log" }
+                ],
+                "links": [
+                  {
+                    "rel": "evidence",
+                    "href": "s3://cgep-lab-grc-evidence-vault-9d3abfe7/runs/34522029255/evidence-34522029255-34efc62834b18e726dc8871875a7d65dfa050b93.tar.gz?versionId=BPWbVu_X3leKYhpSIHx0kKR84SDRrNC9",
+                    "text": "Lab 4.4 Cosign-signed pipeline bundle (run 34522029255). plan.json records the encryption configuration."
+                  },
+                  {
+                    "rel": "reference",
+                    "href": "https://github.com/gregorywilsonjr/cgep-labs/blob/main/terraform/primitives/compliant-s3/main.tf",
+                    "text": "Source Terraform for this primitive."
+                  }
+                ]
+              },
+              {
+                "uuid": "b1e199d1-da26-4bee-947c-3e18d34f83ba",
+                "control-id": "ac-3",
+                "description": "Public access is blocked on both buckets via aws_s3_bucket_public_access_block. All four flags (block_public_acls, block_public_policy, ignore_public_acls, restrict_public_buckets) are true. The module does not expose these flags as variables.",
+                "props": [
+                  { "name": "implementation-status", "value": "implemented" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_public_access_block.primary" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_public_access_block.log" }
+                ],
+                "links": [
+                  {
+                    "rel": "evidence",
+                    "href": "s3://cgep-lab-grc-evidence-vault-9d3abfe7/runs/34522029255/evidence-34522029255-34efc62834b18e726dc8871875a7d65dfa050b93.tar.gz?versionId=BPWbVu_X3leKYhpSIHx0kKR84SDRrNC9",
+                    "text": "Signed pipeline bundle. plan.json contains the four-true public access block."
+                  }
+                ]
+              },
+              {
+                "uuid": "3e87a254-d1c8-46be-b3f4-a59af41a2048",
+                "control-id": "au-3",
+                "description": "Access logs from the primary bucket are routed to a dedicated log bucket via aws_s3_bucket_logging. The log bucket carries its own encryption and public access block.",
+                "props": [
+                  { "name": "implementation-status", "value": "implemented" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_logging.primary" }
+                ],
+                "links": [
+                  {
+                    "rel": "evidence",
+                    "href": "s3://cgep-lab-grc-evidence-vault-9d3abfe7/runs/34522029255/evidence-34522029255-34efc62834b18e726dc8871875a7d65dfa050b93.tar.gz?versionId=BPWbVu_X3leKYhpSIHx0kKR84SDRrNC9",
+                    "text": "Signed pipeline bundle. plan.json contains aws_s3_bucket_logging routing primary access logs to the log bucket."
+                  }
+                ]
+              },
+              {
+                "uuid": "9634bcf7-e7a3-4cd4-950a-9f3c8cf19e9a",
+                "control-id": "cm-6",
+                "description": "Four required compliance tags (Project, Environment, ManagedBy, ComplianceScope) are applied via the AWS provider default_tags block. Variable validation rejects environments outside dev/staging/prod and project names outside the regex. Object versioning is enabled on the primary bucket.",
+                "props": [
+                  { "name": "implementation-status", "value": "implemented" },
+                  { "name": "terraform-resource", "value": "provider.aws.default_tags" },
+                  { "name": "terraform-resource", "value": "aws_s3_bucket_versioning.primary" }
+                ],
+                "links": [
+                  {
+                    "rel": "evidence",
+                    "href": "s3://cgep-lab-grc-evidence-vault-9d3abfe7/runs/34522029255/evidence-34522029255-34efc62834b18e726dc8871875a7d65dfa050b93.tar.gz?versionId=BPWbVu_X3leKYhpSIHx0kKR84SDRrNC9",
+                    "text": "Signed pipeline bundle. Conftest output and plan.json verify tags_all and versioning."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

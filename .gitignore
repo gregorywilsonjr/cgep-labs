@@ -17,3 +17,6 @@ terraform/primitives/policy-fixture/plan.json
 
 # OS noise
 .DS_Store
+
+# Trestle authoring workspace (Lab 6.1). Finished JSON is copied to oscal/.
+.trestle-work/
