@@ -11,7 +11,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | Path | Contents |
 |------|----------|
 | `terraform/primitives/` | Standalone infrastructure units, deployed directly |
-| `terraform/baselines/` | Account-level security services (CloudTrail, Security Hub) |
+| `terraform/baselines/` | Account-level security services (CloudTrail, Security Hub, GCP Org Policy / WIF) |
 | `terraform/modules/` | Reusable modules other code references |
 | `scripts/` | Shared utility scripts |
 | `policies/` | Rego policies that refuse a non-compliant plan |
@@ -30,6 +30,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | 4.3 | [`oidc-trust`](terraform/primitives/oidc-trust/) + [`grc-gate.yml`](.github/workflows/grc-gate.yml) | CM-3, CM-6, CA-2, CA-7, RA-5, AU-9 | Actions artifact `grc-evidence-<run-id>` |
 | 4.4 | Cosign keyless signing + [`verify-evidence.sh`](scripts/verify-evidence.sh) + Lab 2.5 vault | AU-9, AU-11 | [`evidence/lab-4-4/receipt.json`](evidence/lab-4-4/receipt.json) |
 | 5.2 | [`baselines/aws`](terraform/baselines/aws/) | AU-2, AU-12, AU-10, RA-5, SI-4, CM-2, CM-6, CM-8 | [`evidence/lab-5-2/`](evidence/lab-5-2/) |
+| 5.4 | [`baselines/gcp`](terraform/baselines/gcp/) + [`gcp-wif-demo.yml`](.github/workflows/gcp-wif-demo.yml) | CM-6, AC-2, AC-3, AU-2 | [`evidence/lab-5-4/iam-policy.json`](evidence/lab-5-4/iam-policy.json) |
 
 ## About the evidence files
 
@@ -48,6 +49,9 @@ property, so it is left standing until retention expires.
 Lab 5.2 evidence is `evidence/lab-5-2/security-hub-findings.json` from
 `aws securityhub get-findings`. The CloudTrail trail and Security Hub
 standards are destroyed after capture so the per-check bill stops.
+Lab 5.4 evidence is `evidence/lab-5-4/iam-policy.json` (Data Access audit
+configs). WIF is left standing so `.github/workflows/gcp-wif-demo.yml` can
+authenticate without a JSON key.
 
 Terraform working files — `.terraform/`, `.terraform.lock.hcl`, `*.tfstate`, `tfplan`,
 `*.tfvars` — are excluded by `.gitignore`. They are machine-specific and can carry
