@@ -31,4 +31,8 @@ jobs:
       - name: Prove the token works (viewer)
         run: |
           gcloud auth list
-          gcloud storage ls --project="${{ vars.GCP_PROJECT_ID }}"
+          gcloud projects describe "${{ vars.GCP_PROJECT_ID }}" --format="yaml(projectId,projectNumber)"
+          # Empty projects make `gcloud storage ls` exit 1 ("matched no objects").
+          # That is not a WIF failure — auth already succeeded as cgep-grc-gate-sa.
+          gcloud storage ls --project="${{ vars.GCP_PROJECT_ID }}" \
+            || echo "no buckets in project (expected)"
