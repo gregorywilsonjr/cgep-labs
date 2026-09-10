@@ -11,6 +11,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | Path | Contents |
 |------|----------|
 | `terraform/primitives/` | Standalone infrastructure units, deployed directly |
+| `terraform/baselines/` | Account-level security services (CloudTrail, Security Hub) |
 | `terraform/modules/` | Reusable modules other code references |
 | `scripts/` | Shared utility scripts |
 | `policies/` | Rego policies that refuse a non-compliant plan |
@@ -28,6 +29,7 @@ read — and proven by evidence generated on demand rather than collected by han
 | 3.4 | [`policies/*_aws.rego`](policies/) + [`policy-gate.sh`](scripts/policy-gate.sh) | SC-28, AC-3, CM-6 (AWS) | [`evidence/lab-3-4/`](evidence/lab-3-4/) |
 | 4.3 | [`oidc-trust`](terraform/primitives/oidc-trust/) + [`grc-gate.yml`](.github/workflows/grc-gate.yml) | CM-3, CM-6, CA-2, CA-7, RA-5, AU-9 | Actions artifact `grc-evidence-<run-id>` |
 | 4.4 | Cosign keyless signing + [`verify-evidence.sh`](scripts/verify-evidence.sh) + Lab 2.5 vault | AU-9, AU-11 | [`evidence/lab-4-4/receipt.json`](evidence/lab-4-4/receipt.json) |
+| 5.2 | [`baselines/aws`](terraform/baselines/aws/) | AU-2, AU-12, AU-10, RA-5, SI-4, CM-2, CM-6, CM-8 | [`evidence/lab-5-2/`](evidence/lab-5-2/) |
 
 ## About the evidence files
 
@@ -43,6 +45,9 @@ provider, `cgep-grc-gate` role, and vault while that chain is being demonstrated
 Live cloud resources are destroyed once evidence is captured — the evidence stands on its
 own. The vault is the exception during Lab 4.4: Object Lock is the preservation
 property, so it is left standing until retention expires.
+Lab 5.2 evidence is `evidence/lab-5-2/security-hub-findings.json` from
+`aws securityhub get-findings`. The CloudTrail trail and Security Hub
+standards are destroyed after capture so the per-check bill stops.
 
 Terraform working files — `.terraform/`, `.terraform.lock.hcl`, `*.tfstate`, `tfplan`,
 `*.tfvars` — are excluded by `.gitignore`. They are machine-specific and can carry
