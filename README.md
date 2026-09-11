@@ -49,7 +49,8 @@ Live cloud resources are destroyed once evidence is captured — the evidence st
 own. The vault is the exception during Lab 4.4: Object Lock is the preservation
 property, so it is left standing until retention expires.
 Lab 5.2 evidence is `evidence/lab-5-2/security-hub-findings.json` from
-`aws securityhub get-findings`. The CloudTrail trail and Security Hub
+`aws securityhub get-findings`. Account IDs and the IAM user name in that
+file are redacted for the public repo. The CloudTrail trail and Security Hub
 standards are destroyed after capture so the per-check bill stops.
 Lab 5.4 evidence is `evidence/lab-5-4/iam-policy.json` (Data Access audit
 configs). WIF is left standing so `.github/workflows/gcp-wif-demo.yml` can

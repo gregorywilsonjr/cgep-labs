@@ -20,7 +20,8 @@ it). This sandbox has no org, and Hub standards stayed `INCOMPLETE` with
 enable extra CIS checks (cost) or replace an existing hub.
 
 Live resources are destroyed after evidence is captured so the standards
-stop billing. The committed JSON is the artifact.
+stop billing. The committed JSON is the artifact; account IDs and the IAM
+user name are redacted in the public copy.
 
 Findings were also stored in the Lab 2.5 vault (Object Lock) as
 `runs/lab-5-2/security-hub-findings.json`, VersionId
